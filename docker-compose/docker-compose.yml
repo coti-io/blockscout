@@ -5,11 +5,15 @@ services:
     extends:
       file: ./services/redis.yml
       service: redis-db
+    networks:
+      private-testnet_custom_net:
 
   db-init:
     extends:
       file: ./services/db.yml
       service: db-init
+    networks:
+      private-testnet_custom_net:
 
   db:
     depends_on:
@@ -18,6 +22,8 @@ services:
     extends:
       file: ./services/db.yml
       service: db
+    networks:
+      private-testnet_custom_net:
 
   backend:
     depends_on:
@@ -34,10 +40,12 @@ services:
     links:
       - db:database
     environment:
-        ETHEREUM_JSONRPC_HTTP_URL: http://host.docker.internal:8545/
-        ETHEREUM_JSONRPC_TRACE_URL: http://host.docker.internal:8545/
-        ETHEREUM_JSONRPC_WS_URL: ws://host.docker.internal:8545/
-        CHAIN_ID: '1337'
+        ETHEREUM_JSONRPC_HTTP_URL: http://fullnode:8545/
+        ETHEREUM_JSONRPC_TRACE_URL: http://fullnode:8545/
+        ETHEREUM_JSONRPC_WS_URL: ws://fullnode:8546/
+        CHAIN_ID: '15151515'
+    networks:
+      private-testnet_custom_net:
 
   nft_media_handler:
     depends_on:
@@ -50,16 +58,22 @@ services:
       dockerfile: ./docker/Dockerfile
       args:
         RELEASE_VERSION: 7.0.2
+    networks:
+      private-testnet_custom_net:
 
   visualizer:
     extends:
       file: ./services/visualizer.yml
       service: visualizer
+    networks:
+      private-testnet_custom_net:
 
   sig-provider:
     extends:
       file: ./services/sig-provider.yml
       service: sig-provider
+    networks:
+      private-testnet_custom_net:
 
   frontend:
     depends_on:
@@ -67,11 +81,15 @@ services:
     extends:
       file: ./services/frontend.yml
       service: frontend
+    networks:
+      private-testnet_custom_net:
 
   stats-db-init:
     extends:
       file: ./services/stats.yml
       service: stats-db-init
+    networks:
+      private-testnet_custom_net:
 
   stats-db:
     depends_on:
@@ -80,6 +98,8 @@ services:
     extends:
       file: ./services/stats.yml
       service: stats-db
+    networks:
+      private-testnet_custom_net:
 
   stats:
     depends_on:
@@ -88,6 +108,8 @@ services:
     extends:
       file: ./services/stats.yml
       service: stats
+    networks:
+      private-testnet_custom_net:
 
   user-ops-indexer:
     depends_on:
@@ -96,6 +118,8 @@ services:
     extends:
       file: ./services/user-ops-indexer.yml
       service: user-ops-indexer
+    networks:
+      private-testnet_custom_net:
 
   proxy:
     depends_on:
@@ -105,3 +129,9 @@ services:
     extends:
       file: ./services/nginx.yml
       service: proxy
+    networks:
+      private-testnet_custom_net:
+
+networks:
+  private-testnet_custom_net:
+    external: true        
